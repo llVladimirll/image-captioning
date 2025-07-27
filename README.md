@@ -21,9 +21,7 @@ A full-stack web application that generates descriptive captions for uploaded im
 - [Project Structure](#project-structure)  
 - [Model & Inference](#model--inference)  
 - [Screenshots / Demo](#screenshots--demo)  
-- [Future Improvements](#future-improvements)  
 - [License](#license)  
-- [Contributing](#contributing)  
 
 ---
 
@@ -121,13 +119,31 @@ backend/
 ### Frontend
 
 ```
-frontend/
-├── pages/
-│   └── index.tsx         # Main upload UI
-├── components/
-│   └── ImageUploader.tsx
-├── public/
-│   └── ...
+
+├── app/                    # App directory (Next.js 13+)
+│   ├── layout.tsx         # Global layout wrapper
+│   ├── page.tsx           # Main UI page (image upload & result)
+│   └── favicon.ico        # Favicon
+│
+├── components/            # Shared and reusable UI components
+│   └── ui/                # Shadcn-like UI primitives
+│       ├── alert.tsx
+│       ├── button.tsx
+│       └── card.tsx
+│
+├── lib/                   # Utility functions
+│   └── utils.ts
+│
+├── public/                # Public static files
+│   └── screenshots/       # (Optional) screenshots to display in README
+│
+├── styles/ or globals     # Global CSS
+│   └── globals.css
+│
+├── next.config.ts         # Next.js config
+├── tsconfig.json          # TypeScript config
+├── package.json           # Dependencies & scripts
+├── postcss.config.mjs     # PostCSS configuration
 ```
 
 ---
@@ -164,14 +180,6 @@ Sample JSON response:
 
 ---
 
-## 🛠️ Future Improvements
-
-- [ ] Drag-and-drop UI
-- [ ] Multi-caption support
-- [ ] Deploy with Docker or on platforms like Heroku/Vercel
-- [ ] Switch to BLIP-2 or other state-of-the-art vision-language models
-
----
 
 ## 📄 License
 
@@ -179,12 +187,3 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 
 ---
 
-## 🤝 Contributing
-
-1. Fork the repository  
-2. Create your feature branch (`git checkout -b feature/foo`)  
-3. Commit your changes  
-4. Push to the branch (`git push origin feature/foo`)  
-5. Open a pull request  
-
----
