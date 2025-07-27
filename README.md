@@ -4,7 +4,7 @@
 ## Overview
 A full-stack web application that generates descriptive captions for uploaded images.  
 
-- **Backend**: Flask-based API for image processing and inference  
+- **Backend**: Flask-based API using BLIP model for captioning  
 - **Frontend**: Next.js (React) interface for uploading images & displaying results  
 
 ---
@@ -30,7 +30,7 @@ A full-stack web application that generates descriptive captions for uploaded im
 ## ✨ Features
 
 - Upload images via a web interface
-- Flask API processes the image using a pre-trained model
+- Flask API processes the image using BLIP from HuggingFace
 - Model generates natural-language captions
 - Captions shown instantly in the Next.js frontend
 
@@ -38,12 +38,13 @@ A full-stack web application that generates descriptive captions for uploaded im
 
 ## 🧰 Tech Stack
 
-| Layer      | Technology                     |
-|------------|--------------------------------|
-| Frontend   | Next.js (React)                |
-| Backend    | Flask                          |
-| ML Model   | CNN + LSTM / Transformer       |
-| API Comm.  | RESTful (Axios / fetch)        |
+| Layer      | Technology                          |
+|------------|-------------------------------------|
+| Frontend   | Next.js (React)                     |
+| Backend    | Flask                               |
+| ML Model   | Salesforce BLIP (BLIP-base)         |
+| API Comm.  | RESTful (Axios / fetch)             |
+| CORS       | Flask-CORS                          |
 
 ---
 
@@ -66,7 +67,15 @@ source venv/bin/activate     # or .\venv\Scripts\activate on Windows
 pip install -r requirements.txt
 ```
 
-Add your model file (e.g. `model.pth`) and vocabulary/tokenizer (e.g. `vocab.pkl`) into the backend directory.
+Your `requirements.txt` should contain:
+
+```
+flask
+flask-cors
+transformers
+torch
+pillow
+```
 
 Run the Flask API:
 
@@ -94,7 +103,7 @@ Frontend should be accessible at: `http://localhost:3000`
 
 1. Open the frontend in your browser  
 2. Choose an image file and upload it  
-3. The backend generates a caption via the model  
+3. The backend generates a caption via the BLIP model  
 4. Caption is displayed next to your image  
 
 ---
@@ -105,12 +114,8 @@ Frontend should be accessible at: `http://localhost:3000`
 
 ```
 backend/
-├── app.py                # Flask API routes
+├── app.py                # Flask API using BLIP
 ├── requirements.txt
-├── models/
-│   ├── model.pth
-│   └── vocab.pkl
-├── utils/                # image processing, inference
 ```
 
 ### Frontend
@@ -129,10 +134,22 @@ frontend/
 
 ## 🧠 Model & Inference
 
-- The Flask backend loads a pre-trained image-captioning model  
-- Images are preprocessed (e.g., resized, normalized)  
-- Model infers a caption using deep learning (ResNet + LSTM or Transformer)  
-- Caption returned as JSON to frontend  
+- The backend uses the `Salesforce/blip-image-captioning-base` model via HuggingFace Transformers.
+- An image is uploaded to the Flask endpoint `/caption`.
+- The model processes the image and returns a generated natural language caption.
+- The model uses GPU (if available), otherwise falls back to CPU.
+
+Example API usage:
+```bash
+curl -X POST -F "image=@your_image.jpg" http://localhost:5000/caption
+```
+
+Sample JSON response:
+```json
+{
+  "caption": "a cat sitting on a wooden table"
+}
+```
 
 ---
 
@@ -152,7 +169,7 @@ frontend/
 - [ ] Drag-and-drop UI
 - [ ] Multi-caption support
 - [ ] Deploy with Docker or on platforms like Heroku/Vercel
-- [ ] Use BLIP or newer vision-language models
+- [ ] Switch to BLIP-2 or other state-of-the-art vision-language models
 
 ---
 
